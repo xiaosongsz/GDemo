@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--JGPlatform plugin additions-->
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+  <!-- init section is always evaluated once per architecture -->
+  <init>
+    <log text="GPlatform Init"/>
+  </init>
+
+  <!-- optional files or directories to copy to Intermediate/Android/APK -->
+  <resourceCopies>
+    <copyDir src="$S(PluginDir)/../../Android/src/" dst="$S(BuildDir)/src/" />
+  </resourceCopies>
+
+  <!-- optional additions to the GameActivity imports in GameActivity.java -->
+  <gameActivityImportAdditions>
+    <insert>
+      import com.xiaosongsz.GPlatform.*;
+    </insert>
+  </gameActivityImportAdditions>
+
+  <!-- optional additions to GameActivity onCreate in GameActivity.java -->
+  <gameActivityOnCreateAdditions>
+    <insert>
+      GPlatform.getInstance().onCreate(this);
+    </insert>
+  </gameActivityOnCreateAdditions>
+
+  <!-- optional additions to GameActivity onDestroy in GameActivity.java -->
+  <gameActivityOnDestroyAdditions>
+    <insert>
+      GPlatform.getInstance().onDestroy();
+    </insert>
+  </gameActivityOnDestroyAdditions>
+
+  <!-- optional additions to GameActivity onStart in GameActivity.java -->
+  <gameActivityOnStartAdditions>
+    <insert>
+      GPlatform.getInstance().onStart();
+    </insert>
+  </gameActivityOnStartAdditions>
+
+  <!-- optional additions to GameActivity onStop in GameActivity.java -->
+  <gameActivityOnStopAdditions>
+    <insert>
+      GPlatform.getInstance().onStop();
+    </insert>
+  </gameActivityOnStopAdditions>
+
+  <!-- optional additions to GameActivity onPause in GameActivity.java -->
+  <gameActivityOnPauseAdditions>
+    <insert>
+      GPlatform.getInstance().onPause();
+    </insert>
+  </gameActivityOnPauseAdditions>
+
+  <!-- optional additions to GameActivity onResume in GameActivity.java -->
+  <gameActivityOnResumeAdditions>
+    <insert>
+      GPlatform.getInstance().onResume();
+    </insert>
+  </gameActivityOnResumeAdditions>
+
+  <!-- optional additions to GameActivity onActivityResult in GameActivity.java -->
+  <gameActivityOnActivityResultAdditions>
+    <insert>
+      GPlatform.getInstance().onActivityResult(requestCode, resultCode, data);
+    </insert>
+  </gameActivityOnActivityResultAdditions>
+  
+</root>

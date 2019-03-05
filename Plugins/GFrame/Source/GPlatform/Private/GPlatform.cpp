@@ -2,19 +2,44 @@
 
 #include "GPlatform.h"
 
-#define LOCTEXT_NAMESPACE "FGPlatformModule"
+UGPlatform* UGPlatform::Instance = nullptr;
 
-void FGPlatformModule::StartupModule()
+UGPlatform* UGPlatform::GetInstance()
 {
-	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
+	if (Instance == nullptr)
+	{
+		Instance = NewObject<UGPlatform>();
+		Instance->AddToRoot();
+	}
+	return Instance;
 }
 
-void FGPlatformModule::ShutdownModule()
+bool UGPlatform::Init(IGPlatform *Platform)
 {
-	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
-	// we call this function before unloading the module.
+	if (this->Platform || !Platform)
+	{
+		return false;
+	}
+
+	this->Platform = Platform;
+
+//#if PLATFORM_ANDROID
+	this->Android = NewObject<UGAndroid>(this);
+//#endif
+
+	return true;
 }
 
-#undef LOCTEXT_NAMESPACE
-	
-IMPLEMENT_MODULE(FGPlatformModule, GPlatform)
+TSharedPtr<FJsonObject> UGPlatform::SendMessage(int32 Code, TSharedPtr<FJsonObject> Message)
+{
+//#if PLATFORM_ANDROID
+	return Android->SendMessage(Code, Message);
+//#else
+	return nullptr;
+//#endif
+}
+
+FString UGPlatform::ReceiveMessage(int32 Code, FString Message)
+{
+	return TEXT("");
+}

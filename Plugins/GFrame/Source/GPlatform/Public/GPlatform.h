@@ -3,13 +3,39 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Modules/ModuleManager.h"
+#include "IGPlatform.h"
+#include "UObject/NoExportTypes.h"
+//#if PLATFORM_ANDROID
+	#include "GAndroid.h"
+//#endif
+#include "GPlatform.generated.h"
 
-class FGPlatformModule : public IModuleInterface
+/**
+ *
+ */
+UCLASS()
+class GPLATFORM_API UGPlatform : public UObject
 {
-public:
+	GENERATED_BODY()
 
-	/** IModuleInterface implementation */
-	virtual void StartupModule() override;
-	virtual void ShutdownModule() override;
+protected:
+	static UGPlatform* Instance;
+
+public:
+	static UGPlatform* GetInstance();
+
+public:
+	bool Init(IGPlatform *Platform);
+
+	TSharedPtr<FJsonObject> SendMessage(int32 Code, TSharedPtr<FJsonObject> Message);
+
+	FString ReceiveMessage(int32 Code, FString Message);
+
+protected:
+	IGPlatform *Platform;
+
+//#if PLATFORM_ANDROID
+	UPROPERTY()
+		UGAndroid *Android;
+//#endif
 };

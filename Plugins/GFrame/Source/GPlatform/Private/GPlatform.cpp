@@ -1,45 +1,41 @@
 // Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
 #include "GPlatform.h"
+#include "Android/GAndroid.h"
 
-UGPlatform* UGPlatform::Instance = nullptr;
+FGPlatform* FGPlatform::Instance = nullptr;
 
-UGPlatform* UGPlatform::GetInstance()
+FGPlatform* FGPlatform::GetInstance()
 {
 	if (Instance == nullptr)
 	{
-		Instance = NewObject<UGPlatform>();
-		Instance->AddToRoot();
+		Instance = new FGPlatform();
+		Instance->Init();
 	}
+
 	return Instance;
 }
 
-bool UGPlatform::Init(IGPlatform *Platform)
+void FGPlatform::DestroyInstance()
 {
-	if (this->Platform || !Platform)
+	if (Instance != nullptr)
 	{
-		return false;
+		delete Instance;
+		Instance = nullptr;
 	}
-
-	this->Platform = Platform;
-
-//#if PLATFORM_ANDROID
-	this->Android = NewObject<UGAndroid>(this);
-//#endif
-
-	return true;
 }
 
-TSharedPtr<FJsonObject> UGPlatform::SendMessage(int32 Code, TSharedPtr<FJsonObject> Message)
+TSharedPtr<FJsonObject> FGPlatform::SendMessage(int32 Code, TSharedPtr<FJsonObject> Message)
 {
-//#if PLATFORM_ANDROID
-	return Android->SendMessage(Code, Message);
-//#else
 	return nullptr;
-//#endif
 }
 
-FString UGPlatform::ReceiveMessage(int32 Code, FString Message)
+void FGPlatform::RegisterReceive(IGPlatformReceive *Receive)
 {
-	return TEXT("");
+	this->ReceiveArray->Push(Receive);
+}
+
+void FGPlatform::Init()
+{
+	this->ReceiveArray = MakeShareable(new TArray<IGPlatformReceive*>());
 }

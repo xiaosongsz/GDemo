@@ -3,39 +3,34 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "IGPlatform.h"
-#include "UObject/NoExportTypes.h"
-//#if PLATFORM_ANDROID
-	#include "GAndroid.h"
-//#endif
-#include "GPlatform.generated.h"
+#include "IGPlatformReceive.h"
 
 /**
  *
  */
-UCLASS()
-class GPLATFORM_API UGPlatform : public UObject
+class GPLATFORM_API FGPlatform
 {
-	GENERATED_BODY()
-
 protected:
-	static UGPlatform* Instance;
+	static FGPlatform* Instance;
 
 public:
-	static UGPlatform* GetInstance();
+	static FGPlatform* GetInstance();
+
+	static void DestroyInstance();
+
+private:
+	FGPlatform() {};
+
+	~FGPlatform() {};
 
 public:
-	bool Init(IGPlatform *Platform);
-
 	TSharedPtr<FJsonObject> SendMessage(int32 Code, TSharedPtr<FJsonObject> Message);
 
-	FString ReceiveMessage(int32 Code, FString Message);
+	void RegisterReceive(IGPlatformReceive *Receive);
 
 protected:
-	IGPlatform *Platform;
+	void Init();
 
-//#if PLATFORM_ANDROID
-	UPROPERTY()
-		UGAndroid *Android;
-//#endif
+protected:
+	TSharedPtr<TArray<IGPlatformReceive*>> ReceiveArray;
 };

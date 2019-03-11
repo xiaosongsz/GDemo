@@ -14,4 +14,8 @@ class GFRAME_API UGFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 	
+public:
+	
+	UFUNCTION(BlueprintCallable)
+		static void TestPlatform();
 };

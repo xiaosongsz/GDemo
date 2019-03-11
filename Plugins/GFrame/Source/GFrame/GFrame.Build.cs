@@ -39,6 +39,7 @@ public class GFrame : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+                "GPlatform",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

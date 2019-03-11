@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "Json.h"
 
 /**
  * 
  */
-class GPLATFORM_API IGPlatform
+class GPLATFORM_API IGPlatformReceive
 {
 public:
 	virtual TSharedPtr<FJsonObject> ReceiveMessage(int32 Code, TSharedPtr<FJsonObject> Message) = 0;

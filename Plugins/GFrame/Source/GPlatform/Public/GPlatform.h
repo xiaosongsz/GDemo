@@ -43,5 +43,5 @@ protected:
 
 	TArray<IGPlatformMessage*> Messages;
 
-	TSharedPtr<IGPlatform> Platform;
+	IGPlatform* Platform;
 };

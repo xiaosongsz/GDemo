@@ -7,7 +7,8 @@
 /**
  * 
  */
-class GPLATFORM_API FGAndroid
+class GPLATFORM_API IGPlatform
 {
-
+public:
+	//virtual FString SendMessage(int32 Code, FString &Message) { return TEXT(""); };
 };

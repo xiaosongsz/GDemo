@@ -3,7 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "IGPlatformReceive.h"
+#include "IGPlatform.h"
+
+class FJsonObject;
+class IGPlatformMessage;
 
 /**
  *
@@ -11,26 +14,32 @@
 class GPLATFORM_API FGPlatform
 {
 protected:
+
 	static FGPlatform* Instance;
 
 public:
+
 	static FGPlatform* GetInstance();
 
 	static void DestroyInstance();
 
 private:
-	FGPlatform() {};
 
-	~FGPlatform() {};
+	~FGPlatform();
+
+	FGPlatform();
 
 public:
+
+	void RegisterMessage(IGPlatformMessage *Receive);
+
+	void UnRegisterMessage(IGPlatformMessage *Receive);
+
 	TSharedPtr<FJsonObject> SendMessage(int32 Code, TSharedPtr<FJsonObject> Message);
 
-	void RegisterReceive(IGPlatformReceive *Receive);
-
 protected:
-	void Init();
 
-protected:
-	TSharedPtr<TArray<IGPlatformReceive*>> ReceiveArray;
+	TArray<IGPlatformMessage*> Messages;
+
+	TSharedPtr<IGPlatform> Platform;
 };

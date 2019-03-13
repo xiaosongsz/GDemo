@@ -37,19 +37,27 @@ void FGPlatform::DestroyInstance()
 
 FGPlatform::~FGPlatform()
 {
-
+#if PLATFORM_WINDOWS
+	delete Platform;
+#elif PLATFORM_ANDROID
+	//delete (FGAndroid*)Platform;
+#elif PLATFORM_IOS
+	delete Platform;
+#elif PLATFORM_MAC
+	delete Platform;
+#endif
 }
 
 FGPlatform::FGPlatform()
 {
 #if PLATFORM_WINDOWS
-	Platform = MakeShareable(new FGWidnows());
+	Platform = new FGWidnows();
 #elif PLATFORM_ANDROID
-	Platform = MakeShareable(new FGAndroid());
+	Platform = new FGAndroid();
 #elif PLATFORM_IOS
-	Platform = MakeShareable(new FGIOS());
+	Platform = new FGIOS();
 #elif PLATFORM_MAC
-	Platform = MakeShareable(new FGMac());
+	Platform = new FGMac();
 #endif
 }
 
@@ -71,7 +79,7 @@ TSharedPtr<FJsonObject> FGPlatform::SendMessage(int32 Code, TSharedPtr<FJsonObje
 
 	TSharedPtr<FJsonObject> RetJsonObject = MakeShareable(new FJsonObject());
 
-	if (result && Platform.IsValid())
+	if (result && Platform)
 	{
 		FString RetStr = Platform->SendMessage(Code, MessageStr);
 

@@ -16,6 +16,8 @@ JNI_METHOD void Java_com_xiaosongsz_GPlatform_GPlatform_nativeJava2C(JNIEnv* JNI
 	MessageStr = FString(UTF8_TO_TCHAR(javaChars));
 	JNIEnv->ReleaseStringUTFChars(message, javaChars);
 
+	UE_LOG(LogTemp, Log, TEXT("GAndroid:nativeJava2C %s"), &MessageStr);
+
 	DECLARE_CYCLE_STAT(TEXT("FSimpleDelegateGraphTask.STAT_FSimpleDelegateGraphTask_GAndroid"), STAT_FSimpleDelegateGraphTask_GAndroid, STATGROUP_TaskGraphTasks);
 
 	FSimpleDelegateGraphTask::CreateAndDispatchWhenReady(

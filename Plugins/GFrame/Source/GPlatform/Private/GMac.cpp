@@ -2,7 +2,7 @@
 
 #include "GMac.h"
 
-FString FGMac::SendMessage(int32 Code, FString &Message)
+FString FGMac::SendMessage(int32 Code, const FString &Message)
 {
 	return TEXT("");
 }

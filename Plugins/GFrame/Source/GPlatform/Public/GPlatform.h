@@ -37,7 +37,7 @@ public:
 
 	TSharedPtr<FJsonObject> SendMessage(int32 Code, TSharedPtr<FJsonObject> Message);
 
-	void ReceiveMessage(int32 Code, FString &Message);
+	void ReceiveMessage(int32 Code, const FString &Message);
 
 protected:
 

@@ -82,7 +82,7 @@ TSharedPtr<FJsonObject> FGPlatform::SendMessage(int32 Code, TSharedPtr<FJsonObje
 	return RetJsonObject;
 }
 
-void FGPlatform::ReceiveMessage(int32 Code, FString &Message)
+void FGPlatform::ReceiveMessage(int32 Code, const FString &Message)
 {
 
 }

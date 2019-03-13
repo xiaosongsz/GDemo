@@ -2,6 +2,11 @@
 
 #include "GAndroid.h"
 #include "GPlatform.h"
+#if PLATFORM_ANDROID
+#include "AndroidApplication.h"
+#include "Async.h"
+#include "Stats.h"
+#endif
 
 #if PLATFORM_ANDROID
 JNI_METHOD void Java_com_xiaosongsz_GPlatform_GPlatform_nativeJava2C(JNIEnv* JNIEnv, jobject LocalThiz, jint code, jstring message)
@@ -18,14 +23,14 @@ JNI_METHOD void Java_com_xiaosongsz_GPlatform_GPlatform_nativeJava2C(JNIEnv* JNI
 	{
 		FGPlatform::GetInstance()->ReceiveMessage(code, MessageStr);
 	}),
-		GET_STATID(STAT_FSimpleDelegateGraphTask_JGAndroid),
+		GET_STATID(STAT_FSimpleDelegateGraphTask_GAndroid),
 		nullptr,
 		ENamedThreads::GameThread
 		);
 }
 #endif
 
-FString FGAndroid::SendMessage(int32 Code, FString &Message)
+FString FGAndroid::SendMessage(int32 Code, const FString &Message)
 {
 	return TEXT("");
 }

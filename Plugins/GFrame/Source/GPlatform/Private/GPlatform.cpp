@@ -3,7 +3,16 @@
 #include "GPlatform.h"
 #include "Json.h"
 #include "IGPlatformMessage.h"
-#include "Android/GAndroid.h"
+
+#if PLATFORM_WINDOWS
+#include "GWindows.h"
+#elif PLATFORM_ANDROID
+#include "GAndroid.h"
+#elif PLATFORM_IOS
+#include "GIOS.h"
+#elif PLATFORM_MAC
+#include "GMac.h"
+#endif
 
 FGPlatform* FGPlatform::Instance = nullptr;
 
@@ -33,7 +42,15 @@ FGPlatform::~FGPlatform()
 
 FGPlatform::FGPlatform()
 {
-	//Platform = MakeShareable(new FGAndroid());
+#if PLATFORM_WINDOWS
+	Platform = MakeShareable(new FGWidnows());
+#elif PLATFORM_ANDROID
+	Platform = MakeShareable(new FGAndroid());
+#elif PLATFORM_IOS
+	Platform = MakeShareable(new FGIOS());
+#elif PLATFORM_MAC
+	Platform = MakeShareable(new FGMac());
+#endif
 }
 
 void FGPlatform::RegisterMessage(IGPlatformMessage *Receive)
@@ -56,10 +73,10 @@ TSharedPtr<FJsonObject> FGPlatform::SendMessage(int32 Code, TSharedPtr<FJsonObje
 
 	if (result && Platform.IsValid())
 	{
-		//FString RetStr = Platform->SendMessage(Code, MessageStr);
-		
-		//TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(RetStr);
-		//FJsonSerializer::Deserialize(Reader, RetJsonObject);
+		FString RetStr = Platform->SendMessage(Code, MessageStr);
+
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(RetStr);
+		FJsonSerializer::Deserialize(Reader, RetJsonObject);
 	}
 
 	return RetJsonObject;

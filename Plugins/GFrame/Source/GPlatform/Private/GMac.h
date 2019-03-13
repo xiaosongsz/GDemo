@@ -3,12 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "IGPlatform.h"
 
 /**
  * 
  */
-class GPLATFORM_API IGPlatform
+class GPLATFORM_API FGMac : public IGPlatform
 {
+
 public:
-	virtual FString SendMessage(int32 Code, FString &Message) = 0;
+	virtual FString SendMessage(int32 Code, FString &Message);
 };

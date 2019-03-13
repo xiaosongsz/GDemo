@@ -8,9 +8,9 @@
 /**
  * 
  */
-class GPLATFORM_API FGAndroid //: public IGPlatform
+class GPLATFORM_API FGIOS : public IGPlatform
 {
 
 public:
-	//virtual FString SendMessage(int32 Code, FString &Message);
+	virtual FString SendMessage(int32 Code, FString &Message);
 };

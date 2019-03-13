@@ -9,6 +9,7 @@
  */
 class GPLATFORM_API IGPlatform
 {
+
 public:
 	virtual FString SendMessage(int32 Code, FString &Message) = 0;
 };

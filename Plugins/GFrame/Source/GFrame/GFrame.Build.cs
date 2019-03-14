@@ -50,5 +50,11 @@ public class GFrame : ModuleRules
 				// ... add any modules that your module loads dynamically here ...
 			}
 			);
+
+        if (Target.Platform == UnrealTargetPlatform.Android)
+        {
+            // Register Plugin Language
+            AdditionalPropertiesForReceipt.Add("AndroidPlugin", Path.Combine(ModuleDirectory, "GFrame_APL.xml"));
+        }
     }
 }

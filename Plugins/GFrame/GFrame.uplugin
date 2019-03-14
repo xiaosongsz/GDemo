@@ -11,16 +11,16 @@
   "MarketplaceURL": "",
   "SupportURL": "",
   "CanContainContent": true,
-  "IsBetaVersion": true,
+  "IsBetaVersion": false,
   "Installed": false,
   "Modules": [
     {
-      "Name": "GFrame",
+      "Name": "GPlatform",
       "Type": "Runtime",
-      "LoadingPhase": "Default"
+      "LoadingPhase": "PreDefault"
     },
     {
-      "Name": "GPlatform",
+      "Name": "GFrame",
       "Type": "Runtime",
       "LoadingPhase": "Default"
     }

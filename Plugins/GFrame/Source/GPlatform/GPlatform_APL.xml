@@ -15,43 +15,36 @@
   <!-- optional additions to the GameActivity imports in GameActivity.java -->
   <gameActivityImportAdditions>
     <insert>
-      <!--import com.xiaosongsz.GPlatform.*;-->
+      import com.xiaosongsz.GLife.GLife;
     </insert>
   </gameActivityImportAdditions>
 
   <!-- optional additions to GameActivity onCreate in GameActivity.java -->
   <gameActivityOnCreateAdditions>
     <insert>
-      <!--GPlatform.getInstance().onCreate(this);-->
+      GLife.getInstance().onCreate(this);
     </insert>
   </gameActivityOnCreateAdditions>
 
   <!-- optional additions to GameActivity onDestroy in GameActivity.java -->
   <gameActivityOnDestroyAdditions>
     <insert>
-      <!--GPlatform.getInstance().onDestroy();-->
+      GLife.getInstance().onDestroy();
     </insert>
   </gameActivityOnDestroyAdditions>
 
   <!-- optional additions to GameActivity onPause in GameActivity.java -->
   <gameActivityOnPauseAdditions>
     <insert>
-      <!--GPlatform.getInstance().onPause();-->
+      GLife.getInstance().onPause();
     </insert>
   </gameActivityOnPauseAdditions>
 
   <!-- optional additions to GameActivity onResume in GameActivity.java -->
   <gameActivityOnResumeAdditions>
     <insert>
-      <!--GPlatform.getInstance().onResume();-->
+      GLife.getInstance().onResume();
     </insert>
   </gameActivityOnResumeAdditions>
-
-  <!-- optional additions to GameActivity onActivityResult in GameActivity.java -->
-  <gameActivityOnActivityResultAdditions>
-    <insert>
-      <!--GPlatform.getInstance().onActivityResult(requestCode, resultCode, data);-->
-    </insert>
-  </gameActivityOnActivityResultAdditions>
   
 </root>

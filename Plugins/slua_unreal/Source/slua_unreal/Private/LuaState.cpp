@@ -177,6 +177,7 @@ namespace slua {
             lua_close(L);
 			GUObjectArray.RemoveUObjectDeleteListener(this);
 			FCoreUObjectDelegates::GetPostGarbageCollect().Remove(pgcHandler);
+			FWorldDelegates::OnWorldCleanup.Remove(wcHandler);
             stateMapFromIndex.Remove(si);
             L=nullptr;
         }
@@ -195,6 +196,7 @@ namespace slua {
             mainState = this;
 
 		pgcHandler = FCoreUObjectDelegates::GetPostGarbageCollect().AddRaw(this, &LuaState::onEngineGC);
+		wcHandler = FWorldDelegates::OnWorldCleanup.AddRaw(this, &LuaState::onWorldCleanup);
 		GUObjectArray.AddUObjectDeleteListener(this);
         stackCount = 0;
         si = ++StateIndex;
@@ -324,9 +326,21 @@ namespace slua {
 	void LuaState::onEngineGC()
 	{
 		// find freed uclass
-		for(ClassFunctionCache::CacheMap::TIterator it(classMap.cacheMap);it;++it)
-			if (!it.Key().IsValid()) 
-				classMap.cacheMap.Remove(it.Key());
+		for (ClassFunctionCache::CacheMap::TIterator it(classMap.cacheMap); it; ++it)
+			if (!it.Key().IsValid())
+				it.RemoveCurrent();
+
+		// erase all null reference
+		// Collector.AddReferencedObjects will set inner item is nullptr
+		// so check and remove it
+		for (TSet<UObject*>::TIterator it(objRefs); it; ++it)
+			if (*it == nullptr) 
+				it.RemoveCurrent();
+	}
+
+	void LuaState::onWorldCleanup(UWorld * World, bool bSessionEnded, bool bCleanupResources)
+	{
+		unlinkUObject(World, World->GetUniqueID());
 	}
 
     LuaVar LuaState::doBuffer(const uint8* buf,uint32 len, const char* chunk, LuaVar* pEnv) {
@@ -375,6 +389,11 @@ namespace slua {
 
 	void LuaState::NotifyUObjectDeleted(const UObjectBase * Object, int32 Index)
 	{
+		unlinkUObject(Object, Index);
+	}
+
+	void LuaState::unlinkUObject(const UObjectBase * Object, int32 Index)
+	{
 		// pop ud to stack
 		if (!LuaObject::getFromCache(L, const_cast<UObjectBase *>(Object), nullptr, false))
 			return;
@@ -390,7 +409,7 @@ namespace slua {
 		// indicate ud had be free
 		ud->flag |= UD_HADFREE;
 		// remove ref, Object must be an UObject in slua
-		removeRef((uint32)Index);
+		removeRef((UObject*)Object);
 		// remove cache
 		LuaObject::removeFromCache(L, ud);
 	}
@@ -499,17 +518,12 @@ namespace slua {
 
 	void LuaState::addRef(UObject* obj)
 	{
-		objRefs.Add(obj->GetUniqueID(), obj);
+		objRefs.Add(obj);
 	}
 
 	void LuaState::removeRef(UObject* obj)
 	{
-		objRefs.Remove(obj->GetUniqueID());
-	}
-
-	void LuaState::removeRef(uint32 id)
-	{
-		objRefs.Remove(id);
+		objRefs.Remove(obj);
 	}
 
 	FDeadLoopCheck::FDeadLoopCheck()
@@ -550,7 +564,7 @@ namespace slua {
 	{
 		if (frameCounter.Increment() == 1) {
 			timeoutCounter.Set(0);
-			timeoutEvent = pEvent;
+			timeoutEvent.store(pEvent);
 		}
 	}
 
@@ -561,7 +575,8 @@ namespace slua {
 
 	void FDeadLoopCheck::onScriptTimeout()
 	{
-		if (timeoutEvent) timeoutEvent->onTimeout();
+		auto pEvent = timeoutEvent.load();
+		if (pEvent) pEvent->onTimeout();
 	}
 
 	LuaScriptCallGuard::LuaScriptCallGuard(lua_State * L_)

@@ -2,7 +2,7 @@
 
 #include "GMacOS.h"
 
-FString UGMacOS::SendMessage(int32 Code, const FString &Message)
+FString UGMacOS::SendMessage(const FString &Head, const FString &Message)
 {
 	return TEXT("");
 }

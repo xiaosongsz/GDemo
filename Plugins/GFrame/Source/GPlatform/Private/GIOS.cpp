@@ -2,7 +2,7 @@
 
 #include "GIOS.h"
 
-FString UGIOS::SendMessage(int32 Code, const FString &Message)
+FString UGIOS::SendMessage(const FString &Head, const FString &Message)
 {
 	return TEXT("");
 }

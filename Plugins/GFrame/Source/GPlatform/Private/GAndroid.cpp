@@ -35,7 +35,7 @@ JNI_METHOD void Java_com_xiaosongsz_GPlatform_GPlatform_nativeJava2C(JNIEnv* JNI
 }
 #endif
 
-FString UGAndroid::SendMessage(int32 Code, const FString &Message)
+FString UGAndroid::SendMessage(const FString &Head, const FString &Message)
 {
 	return TEXT("");
 }

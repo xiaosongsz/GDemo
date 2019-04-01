@@ -60,6 +60,26 @@ void UGPlatform::UnRegisterMessage(const FString &Head)
 
 TSharedPtr<FJsonObject> UGPlatform::SendMessage(const FString &Head, TSharedPtr<FJsonObject> Message)
 {
+	if (Platform)
+	{
+		FString MessageStr;
+		TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&MessageStr);
+		bool result = FJsonSerializer::Serialize(Message.ToSharedRef(), Writer);
+		if (result)
+		{
+			FString RetStr = Platform->SendMessage(Head, MessageStr);
+
+			TSharedPtr<FJsonObject> RetObject;
+			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(RetStr);
+			result = FJsonSerializer::Deserialize(Reader, RetObject);
+
+			if (result)
+			{
+				return RetObject;
+			}
+		}
+	}
+
 	return nullptr;
 }
 

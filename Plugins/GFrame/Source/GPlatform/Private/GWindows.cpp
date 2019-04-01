@@ -2,7 +2,7 @@
 
 #include "GWindows.h"
 
-FString UGWidnows::SendMessage(int32 Code, const FString &Message)
+FString UGWidnows::SendMessage(const FString &Head, const FString &Message)
 {
 	return TEXT("");
 }

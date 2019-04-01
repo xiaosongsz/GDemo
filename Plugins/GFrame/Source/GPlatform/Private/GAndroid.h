@@ -15,5 +15,5 @@ class GPLATFORM_API UGAndroid : public UObject, public IGPlatform
 	GENERATED_BODY()
 
 public:
-	virtual FString SendMessage(int32 Code, const FString &Message) override;
+	virtual FString SendMessage(const FString &Head, const FString &Message) override;
 };

@@ -16,5 +16,5 @@ class GPLATFORM_API UGIOS : public UObject, public IGPlatform
 	GENERATED_BODY()
 
 public:
-	virtual FString SendMessage(int32 Code, const FString &Message);
+	virtual FString SendMessage(const FString &Head, const FString &Message);
 };

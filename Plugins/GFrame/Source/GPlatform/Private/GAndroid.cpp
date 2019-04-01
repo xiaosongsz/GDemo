@@ -37,5 +37,28 @@ JNI_METHOD void Java_com_xiaosongsz_GPlatform_GPlatform_nativeJava2C(JNIEnv* JNI
 
 FString UGAndroid::SendMessage(const FString &Head, const FString &Message)
 {
+#if PLATFORM_ANDROID
+	JNIEnv* JEnv = FAndroidApplication::GetJavaEnv();
+	if (nullptr != JEnv)
+	{
+		jstring jjson = JEnv->NewStringUTF(TCHAR_TO_UTF8(*Json));
+
+		jclass JGPlatformClass = FAndroidApplication::FindJavaClass("com/xiaosongsz/GPlatform/GPlatform");
+		if (JGPlatformClass != nullptr)
+		{
+			jmethodID methodID = JEnv->GetStaticMethodID(JGPlatformClass, "nativeC2Java", "(Ljava/lang/String;)Ljava/lang/String");
+			if (methodID != 0)
+			{
+				jstring ret = JEnv->CallStaticStringMethod(JGPlatformClass, methodID, jjson);
+
+				FString RetString;
+				HeadStr = FString(UTF8_TO_TCHAR(ret));
+
+				return RetString;
+			}
+		}
+	}
+#endif
+
 	return TEXT("");
 }

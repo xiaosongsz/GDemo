@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "GMac.h"
+#include "GMacOS.h"
 
-FString FGMac::SendMessage(int32 Code, const FString &Message)
+FString UGMacOS::SendMessage(int32 Code, const FString &Message)
 {
 	return TEXT("");
 }

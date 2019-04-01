@@ -1,9 +1,6 @@
 // Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
 #include "GPlatform.h"
-#include "Json.h"
-#include "IGPlatformMessage.h"
-
 #if PLATFORM_WINDOWS
 #include "GWindows.h"
 #elif PLATFORM_ANDROID
@@ -11,86 +8,77 @@
 #elif PLATFORM_IOS
 #include "GIOS.h"
 #elif PLATFORM_MAC
-#include "GMac.h"
+#include "GMacOS.h"
 #endif
 
-FGPlatform* FGPlatform::Instance = nullptr;
+DEFINE_LOG_CATEGORY_STATIC(GPlatform, Log, All);
 
-FGPlatform* FGPlatform::GetInstance()
+UGPlatform * UGPlatform::Instance;
+
+UGPlatform * UGPlatform::GetInstance()
 {
-	if (Instance == nullptr)
+	if (!Instance)
 	{
-		Instance = new FGPlatform();
+		Instance = NewObject<UGPlatform>();
+		Instance->AddToRoot();
+		Instance->Init();
 	}
 
 	return Instance;
 }
 
-void FGPlatform::DestroyInstance()
-{
-	if (Instance != nullptr)
-	{
-		delete Instance;
-		Instance = nullptr;
-	}
-}
-
-FGPlatform::~FGPlatform()
+void UGPlatform::Init()
 {
 #if PLATFORM_WINDOWS
-	delete Platform;
+	UGWidnows *GWindows = NewObject<UGWidnows>(this);
+	GWindows->AddToRoot();
+	Platform = GWindows;
 #elif PLATFORM_ANDROID
-	//delete (FGAndroid*)Platform;
+	UGAndroid *GAndroid = NewObject<UGAndroid>(this);
+	GAndroid->AddToRoot();
+	Platform = GAndroid;
 #elif PLATFORM_IOS
-	delete Platform;
+	UGIOS *GIOS = NewObject<UGIOS>(this);
+	GIOS->AddToRoot();
+	Platform = GIOS;
 #elif PLATFORM_MAC
-	delete Platform;
+	UGMacOS *GMacOS = NewObject<UGMacOS>(this);
+	GMacOS->AddToRoot();
+	Platform = GMacOS;
 #endif
 }
 
-FGPlatform::FGPlatform()
+void UGPlatform::RegisterMessage(const FString &Head, IGPlatformMessage *Receive)
 {
-#if PLATFORM_WINDOWS
-	Platform = new FGWidnows();
-#elif PLATFORM_ANDROID
-	Platform = new FGAndroid();
-#elif PLATFORM_IOS
-	Platform = new FGIOS();
-#elif PLATFORM_MAC
-	Platform = new FGMac();
-#endif
+	Messages.Add(Head, Receive);
 }
 
-void FGPlatform::RegisterMessage(IGPlatformMessage *Receive)
+void UGPlatform::UnRegisterMessage(const FString &Head)
 {
-	Messages.Add(Receive);
+	Messages.Remove(Head);
 }
 
-void FGPlatform::UnRegisterMessage(IGPlatformMessage *Receive)
+TSharedPtr<FJsonObject> UGPlatform::SendMessage(const FString &Head, TSharedPtr<FJsonObject> Message)
 {
-	Messages.Remove(Receive);
+	return nullptr;
 }
 
-TSharedPtr<FJsonObject> FGPlatform::SendMessage(int32 Code, TSharedPtr<FJsonObject> Message)
+void UGPlatform::ReceiveMessage(const FString &Head, const FString &Message)
 {
-	FString MessageStr;
-	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&MessageStr);
-	bool result = FJsonSerializer::Serialize(Message.ToSharedRef(), Writer);
-
-	TSharedPtr<FJsonObject> RetJsonObject = MakeShareable(new FJsonObject());
-
-	if (result && Platform)
+	if (Messages.Find(Head))
 	{
-		FString RetStr = Platform->SendMessage(Code, MessageStr);
+		TSharedPtr<FJsonObject> JsonMessage;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Message);
+		bool result = FJsonSerializer::Deserialize(Reader, JsonMessage);
 
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(RetStr);
-		FJsonSerializer::Deserialize(Reader, RetJsonObject);
+		if (result)
+		{
+			IGPlatformMessage *PlatformMessage = Messages.FindRef(Head);
+			PlatformMessage->OnPlatformMessage(JsonMessage);
+		}
 	}
-
-	return RetJsonObject;
-}
-
-void FGPlatform::ReceiveMessage(int32 Code, const FString &Message)
-{
-
+	else
+	{
+		UE_LOG(GPlatform, Warning, TEXT("ReceiveMessage:UnRegister %s Message"), &Head);
+	}
 }

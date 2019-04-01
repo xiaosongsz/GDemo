@@ -4,12 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "IGPlatform.h"
+#include "GMacOS.generated.h"
 
 /**
  * 
  */
-class GPLATFORM_API FGMac : public IGPlatform
+UCLASS()
+class GPLATFORM_API UGMacOS : public UObject, public IGPlatform
 {
+
+	GENERATED_BODY()
 
 public:
 	virtual FString SendMessage(int32 Code, const FString &Message);

@@ -4,12 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "IGPlatform.h"
+#include "GAndroid.generated.h"
 
 /**
  * 
  */
-class GPLATFORM_API FGAndroid : public IGPlatform
+UCLASS()
+class GPLATFORM_API UGAndroid : public UObject, public IGPlatform
 {
+	GENERATED_BODY()
 
 public:
 	virtual FString SendMessage(int32 Code, const FString &Message) override;

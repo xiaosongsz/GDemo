@@ -3,45 +3,41 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Json.h"
 #include "IGPlatform.h"
-
-class FJsonObject;
-class IGPlatformMessage;
+#include "IGPlatformMessage.h"
+#include "GPlatform.generated.h"
 
 /**
  *
  */
-class GPLATFORM_API FGPlatform
+UCLASS()
+class GPLATFORM_API UGPlatform : public UObject
 {
-protected:
-
-	static FGPlatform* Instance;
-
-public:
-
-	static FGPlatform* GetInstance();
-
-	static void DestroyInstance();
-
-private:
-
-	~FGPlatform();
-
-	FGPlatform();
-
-public:
-
-	void RegisterMessage(IGPlatformMessage *Receive);
-
-	void UnRegisterMessage(IGPlatformMessage *Receive);
-
-	TSharedPtr<FJsonObject> SendMessage(int32 Code, TSharedPtr<FJsonObject> Message);
-
-	void ReceiveMessage(int32 Code, const FString &Message);
+	GENERATED_BODY()
 
 protected:
 
-	TArray<IGPlatformMessage*> Messages;
+	static UGPlatform *Instance;
 
-	IGPlatform* Platform;
+public:
+
+	static UGPlatform *GetInstance();
+
+public:
+
+	void Init();
+
+	void RegisterMessage(const FString &Head, IGPlatformMessage *Receive);
+
+	void UnRegisterMessage(const FString &Head);
+
+	TSharedPtr<FJsonObject> SendMessage(const FString &Head, TSharedPtr<FJsonObject> Message);
+
+	void ReceiveMessage(const FString &Head, const FString &Message);
+
+protected:
+	IGPlatform *Platform;
+
+	TMap<FString, IGPlatformMessage*> Messages;
 };

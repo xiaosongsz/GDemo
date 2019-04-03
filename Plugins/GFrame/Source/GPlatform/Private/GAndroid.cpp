@@ -41,7 +41,7 @@ FString UGAndroid::SendMessage(const FString &Head, const FString &Message)
 	JNIEnv* JEnv = FAndroidApplication::GetJavaEnv();
 	if (nullptr != JEnv)
 	{
-		jstring jjson = JEnv->NewStringUTF(TCHAR_TO_UTF8(*Json));
+		jstring jjson = JEnv->NewStringUTF(TCHAR_TO_UTF8(*Message));
 
 		jclass JGPlatformClass = FAndroidApplication::FindJavaClass("com/xiaosongsz/GPlatform/GPlatform");
 		if (JGPlatformClass != nullptr)
@@ -49,10 +49,9 @@ FString UGAndroid::SendMessage(const FString &Head, const FString &Message)
 			jmethodID methodID = JEnv->GetStaticMethodID(JGPlatformClass, "nativeC2Java", "(Ljava/lang/String;)Ljava/lang/String");
 			if (methodID != 0)
 			{
-				jstring ret = JEnv->CallStaticStringMethod(JGPlatformClass, methodID, jjson);
-
-				FString RetString;
-				HeadStr = FString(UTF8_TO_TCHAR(ret));
+				jstring ret = (jstring)JEnv->CallStaticObjectMethod(JGPlatformClass, methodID, jjson);
+				const char* retChars = JEnv->GetStringUTFChars(ret, 0);
+				FString RetString = FString(UTF8_TO_TCHAR(retChars));
 
 				return RetString;
 			}

@@ -16,6 +16,6 @@ class GFRAME_API UGFunctionLibrary : public UBlueprintFunctionLibrary
 	
 public:
 	
-	//UFUNCTION(BlueprintCallable)
-		//static FString PlatformSendMessage(const FString &Head, const FString &Message);
+	UFUNCTION(BlueprintCallable)
+		static FString PlatformSendMessage(const FString &Head, const FString &Message);
 };

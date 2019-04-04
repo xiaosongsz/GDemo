@@ -2,9 +2,9 @@
 
 #include "GFunctionLibrary.h"
 ////#include "GPlatform.h"
-//
-//FString UGFunctionLibrary::PlatformSendMessage(const FString &Head, const FString &Message)
-//{
+
+FString UGFunctionLibrary::PlatformSendMessage(const FString &Head, const FString &Message)
+{
 //	TSharedPtr<FJsonObject> MessageObj;
 //	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Message);
 //	bool result = FJsonSerializer::Deserialize(Reader, MessageObj);
@@ -13,5 +13,5 @@
 //		UGPlatform::GetInstance()->SendMessage(Head, MessageObj);
 //	}
 //
-//	return TEXT("");
-//}
+	return TEXT("");
+}
